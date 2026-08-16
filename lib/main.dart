@@ -12,8 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // Define the default brightness and colors.
-        brightness: Brightness.light,
+         brightness: Brightness.light,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -52,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         child: Column(
 
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text('You have pushed the button this many times:'),
             Text(
