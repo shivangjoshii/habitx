@@ -13,28 +13,28 @@ class OnboardingController extends GetxController {
   final List<OnboardingItem> items = const [
     OnboardingItem(
       title: 'Master Deep Focus',
-      subtitle: 'Distraction-free timers, ambient soundscapes, and strict study locks.',
+      subtitle: 'Distraction-free timers and ambient soundscapes.',
       tag: 'Deep Focus',
       imageAsset: 'assets/images/onb1.png',
       icon: Iconsax.timer_1_copy,
     ),
     OnboardingItem(
       title: 'Block Addictive Feeds',
-      subtitle: 'Calm mindful interventions that stop endless scrolling on social apps.',
+      subtitle: 'Mindful interventions to end endless scrolling.',
       tag: 'App Shield',
       imageAsset: 'assets/images/onb2.png',
       icon: Iconsax.shield_cross_copy,
     ),
     OnboardingItem(
       title: 'Build Lasting Habits',
-      subtitle: 'Track daily consistency, protect streaks, and reach target milestones.',
+      subtitle: 'Track daily consistency and protect your streaks.',
       tag: 'Habit Mastery',
       imageAsset: 'assets/images/onb3.png',
       icon: Iconsax.chart_square_copy,
     ),
     OnboardingItem(
       title: 'AI Insights & Live Rooms',
-      subtitle: 'Smart focus recommendations and multiplayer accountability study groups.',
+      subtitle: 'Smart focus rhythms and live accountability rooms.',
       tag: 'Multiplayer OS',
       imageAsset: 'assets/images/onb4.png',
       icon: Iconsax.people_copy,

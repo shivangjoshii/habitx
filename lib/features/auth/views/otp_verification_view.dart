@@ -1,10 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/curved_auth_header.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../controllers/auth_controller.dart';
 
@@ -14,9 +14,9 @@ class OtpVerificationView extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
-      width: 52,
-      height: 56,
-      textStyle: AppTypography.largeHeading.copyWith(
+      width: 50,
+      height: 54,
+      textStyle: GoogleFonts.plusJakartaSans(
         color: AppColors.primaryAccent(context),
         fontSize: 22,
         fontWeight: FontWeight.w700,
@@ -38,84 +38,95 @@ class OtpVerificationView extends GetView<AuthController> {
 
     return Scaffold(
       backgroundColor: AppColors.background(context),
-      appBar: AppBar(
-        backgroundColor: AppColors.background(context),
-        leading: IconButton(
-          icon: Icon(Iconsax.arrow_left_copy, color: AppColors.textPrimary(context), size: 20),
-          onPressed: () => Get.back(),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FadeInDown(
-                duration: const Duration(milliseconds: 500),
-                child: Text(
-                  'Verify Email',
-                  style: AppTypography.largeHeading.copyWith(color: AppColors.textPrimary(context)),
-                ),
-              ),
-              const SizedBox(height: 6),
-              FadeInDown(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 100),
-                child: Obx(() => Text(
-                      'Enter the 6-digit code dispatched to ${controller.pendingVerificationEmail.value}.',
-                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
-                    )),
-              ),
-              const SizedBox(height: 36),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 150),
-                child: Center(
-                  child: Pinput(
-                    length: 6,
-                    controller: controller.otpController,
-                    defaultPinTheme: defaultPinTheme,
-                    focusedPinTheme: focusedPinTheme,
-                    autofocus: true,
-                    onCompleted: (_) => controller.verifyEmail(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CurvedAuthHeader(
+              title: 'Verify Email',
+              subtitle: 'Enter the 6-digit verification code dispatched to your inbox.',
+              showBackButton: true,
+              height: 275,
+              onBack: () => Get.back(),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    child: Obx(() => Text(
+                          'Code sent to: ${controller.pendingVerificationEmail.value}',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            color: AppColors.textSecondary(context),
+                          ),
+                        )),
                   ),
-                ),
-              ),
-              const SizedBox(height: 36),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 200),
-                child: Obx(() => CustomButton(
-                      text: 'Verify & Enter HabitX',
-                      isLoading: controller.isLoading.value,
-                      onPressed: controller.verifyEmail,
-                    )),
-              ),
-              const SizedBox(height: 24),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 250),
-                child: Center(
-                  child: Obx(() {
-                    if (controller.resendTimer.value > 0) {
-                      return Text(
-                        'Resend code in ${controller.resendTimer.value}s',
-                        style: AppTypography.secondary.copyWith(color: AppColors.textTertiary(context)),
-                      );
-                    }
-                    return TextButton(
-                      onPressed: controller.resendVerificationOtp,
-                      child: Text(
-                        'Resend code',
-                        style: AppTypography.bodySemiBold.copyWith(color: AppColors.primaryAccent(context)),
+                  const SizedBox(height: 28),
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    delay: const Duration(milliseconds: 60),
+                    child: Center(
+                      child: Pinput(
+                        length: 6,
+                        controller: controller.otpController,
+                        defaultPinTheme: defaultPinTheme,
+                        focusedPinTheme: focusedPinTheme,
+                        autofocus: true,
+                        onCompleted: (_) => controller.verifyEmail(),
                       ),
-                    );
-                  }),
-                ),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    delay: const Duration(milliseconds: 100),
+                    child: Obx(() => CustomButton(
+                          text: 'Verify & Enter HabitX',
+                          isLoading: controller.isLoading.value,
+                          onPressed: controller.verifyEmail,
+                        )),
+                  ),
+                  const SizedBox(height: 20),
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    delay: const Duration(milliseconds: 140),
+                    child: Center(
+                      child: Obx(() {
+                        if (controller.resendTimer.value > 0) {
+                          return Text(
+                            'Resend code in ${controller.resendTimer.value}s',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 13,
+                              color: AppColors.textTertiary(context),
+                            ),
+                          );
+                        }
+                        return TextButton(
+                          onPressed: controller.resendVerificationOtp,
+                          child: Text(
+                            'Resend code',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.primaryAccent(context),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

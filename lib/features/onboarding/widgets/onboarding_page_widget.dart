@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -23,135 +24,155 @@ class OnboardingPageWidget extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: 32),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            item.title,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary(context),
-              letterSpacing: -0.3,
+          child: FadeInUp(
+            duration: const Duration(milliseconds: 450),
+            child: Text(
+              item.title,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary(context),
+                letterSpacing: -0.3,
+              ),
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Text(
-            item.subtitle,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: AppColors.textSecondary(context),
-              height: 1.35,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: FadeInUp(
+            duration: const Duration(milliseconds: 450),
+            delay: const Duration(milliseconds: 80),
+            child: Text(
+              item.subtitle,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textSecondary(context),
+                letterSpacing: -0.1,
+              ),
             ),
           ),
         ),
         const SizedBox(height: 24),
         Expanded(
-          child: Stack(
-            alignment: Alignment.topCenter,
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                right: 25,
-                top: 110,
-                child: Container(
-                  width: 3,
-                  height: 48,
+          child: FadeInUp(
+            duration: const Duration(milliseconds: 550),
+            delay: const Duration(milliseconds: 140),
+            child: Stack(
+              alignment: Alignment.topCenter,
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  right: 27,
+                  top: 125,
+                  child: Container(
+                    width: 3,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: chassisColor,
+                      borderRadius: const BorderRadius.horizontal(
+                        right: Radius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 27,
+                  top: 185,
+                  child: Container(
+                    width: 3,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: chassisColor,
+                      borderRadius: const BorderRadius.horizontal(
+                        right: Radius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 27,
+                  top: 105,
+                  child: Container(
+                    width: 3,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: chassisColor,
+                      borderRadius: const BorderRadius.horizontal(
+                        left: Radius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 30, right: 30, top: 10),
                   decoration: BoxDecoration(
                     color: chassisColor,
-                    borderRadius: const BorderRadius.horizontal(
-                      right: Radius.circular(4),
-                    ),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: isDark ? 0.22 : 0.06),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              Positioned(
-                right: 25,
-                top: 175,
-                child: Container(
-                  width: 3,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: chassisColor,
-                    borderRadius: const BorderRadius.horizontal(
-                      right: Radius.circular(4),
-                    ),
+                  padding: const EdgeInsets.only(
+                    left: 8,
+                    right: 8,
+                    top: 8,
+                    bottom: 0,
                   ),
-                ),
-              ),
-              Positioned(
-                left: 25,
-                top: 90,
-                child: Container(
-                  width: 3,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: chassisColor,
-                    borderRadius: const BorderRadius.horizontal(
-                      left: Radius.circular(4),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: phoneScreenBg,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(34),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 28),
-                decoration: BoxDecoration(
-                  color: chassisColor,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(42)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.12),
-                      blurRadius: 24,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.only(
-                  left: 8,
-                  right: 8,
-                  top: 8,
-                  bottom: 0,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: phoneScreenBg,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(36),
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(36),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Positioned.fill(
-                          child: _buildInnerScreen(context, pageIndex),
-                        ),
-                        Positioned(
-                          top: 12,
-                          child: Container(
-                            height: 12,
-                            width: 12,
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
-                              shape: BoxShape.circle,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(34),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          Positioned.fill(
+                            child: Image.asset(
+                              item.imageAsset,
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                              errorBuilder: (context, error, stackTrace) {
+                                return _buildInnerScreen(context, pageIndex);
+                              },
                             ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            top: 12,
+                            child: Container(
+                              height: 11,
+                              width: 11,
+                              decoration: const BoxDecoration(
+                                color: Colors.black,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

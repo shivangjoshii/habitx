@@ -309,15 +309,6 @@ class AuthController extends GetxController {
   @override
   void onClose() {
     _timer?.cancel();
-    loginEmailController.dispose();
-    loginPasswordController.dispose();
-    registerNameController.dispose();
-    registerEmailController.dispose();
-    registerPasswordController.dispose();
-    otpController.dispose();
-    forgotEmailController.dispose();
-    resetOtpController.dispose();
-    resetNewPasswordController.dispose();
     super.onClose();
   }
 }

@@ -11,6 +11,7 @@ import '../../features/onboarding/bindings/onboarding_binding.dart';
 import '../../features/onboarding/views/onboarding_view.dart';
 import '../../features/splash/bindings/splash_binding.dart';
 import '../../features/splash/views/splash_view.dart';
+import '../widgets/no_internet_view.dart';
 import '../widgets/not_found_view.dart';
 import 'app_routes.dart';
 
@@ -76,6 +77,12 @@ class AppPages {
       name: AppRoutes.dashboard,
       page: () => const DashboardView(),
       binding: DashboardBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: AppRoutes.noInternet,
+      page: () => const NoInternetView(),
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 250),
     ),

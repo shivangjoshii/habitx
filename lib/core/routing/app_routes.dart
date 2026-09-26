@@ -7,4 +7,5 @@ class AppRoutes {
   static const String otpVerification = '/otp-verification';
   static const String forgotPassword = '/forgot-password';
   static const String dashboard = '/dashboard';
+  static const String noInternet = '/no-internet';
 }

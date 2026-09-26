@@ -1,10 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/curved_auth_header.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../controllers/auth_controller.dart';
@@ -16,121 +17,112 @@ class LoginView extends GetView<AuthController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background(context),
-      appBar: AppBar(
-        backgroundColor: AppColors.background(context),
-        leading: IconButton(
-          icon: Icon(Iconsax.arrow_left_copy, color: AppColors.textPrimary(context), size: 20),
-          onPressed: () => Get.back(),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FadeInDown(
-                duration: const Duration(milliseconds: 500),
-                child: Text(
-                  'Welcome Back',
-                  style: AppTypography.largeHeading.copyWith(color: AppColors.textPrimary(context)),
-                ),
-              ),
-              const SizedBox(height: 6),
-              FadeInDown(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 100),
-                child: Text(
-                  'Enter your credentials to access your focus sanctuary.',
-                  style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
-                ),
-              ),
-              const SizedBox(height: 32),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 150),
-                child: CustomTextField(
-                  label: 'Email',
-                  hintText: 'name@example.com',
-                  controller: controller.loginEmailController,
-                  keyboardType: TextInputType.emailAddress,
-                  prefixIcon: Icon(Iconsax.sms_copy, size: 18, color: AppColors.textTertiary(context)),
-                ),
-              ),
-              const SizedBox(height: 18),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 250),
-                child: CustomTextField(
-                  label: 'Password',
-                  hintText: '••••••••',
-                  controller: controller.loginPasswordController,
-                  isPassword: true,
-                  prefixIcon: Icon(Iconsax.lock_copy, size: 18, color: AppColors.textTertiary(context)),
-                ),
-              ),
-              const SizedBox(height: 12),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 300),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => Get.toNamed(AppRoutes.forgotPassword),
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    child: Text(
-                      'Forgot password?',
-                      style: AppTypography.secondary.copyWith(
-                        color: AppColors.primaryAccent(context),
-                        fontWeight: FontWeight.w500,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CurvedAuthHeader(
+              title: 'Welcome Back',
+              subtitle: 'Sign in to access your focus sanctuary.',
+              showBackButton: true,
+              height: 275,
+              onBack: () => Get.back(),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    child: CustomTextField(
+                      label: 'Email Address',
+                      hintText: 'name@example.com',
+                      controller: controller.loginEmailController,
+                      keyboardType: TextInputType.emailAddress,
+                      prefixIcon: Icon(Iconsax.sms_copy, size: 18, color: AppColors.textTertiary(context)),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    delay: const Duration(milliseconds: 50),
+                    child: CustomTextField(
+                      label: 'Password',
+                      hintText: '••••••••',
+                      controller: controller.loginPasswordController,
+                      isPassword: true,
+                      prefixIcon: Icon(Iconsax.lock_copy, size: 18, color: AppColors.textTertiary(context)),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    delay: const Duration(milliseconds: 80),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () => Get.toNamed(AppRoutes.forgotPassword),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        child: Text(
+                          'Forgot password?',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            color: AppColors.primaryAccent(context),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 28),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 350),
-                child: Obx(() => CustomButton(
-                      text: 'Sign In',
-                      isLoading: controller.isLoading.value,
-                      onPressed: controller.login,
-                    )),
-              ),
-              const SizedBox(height: 16),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 400),
-                child: CustomButton(
-                  text: 'Continue as Guest',
-                  isSecondary: true,
-                  onPressed: controller.guestLogin,
-                ),
-              ),
-              const SizedBox(height: 36),
-              FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 450),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account? ",
-                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
+                  const SizedBox(height: 20),
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    delay: const Duration(milliseconds: 110),
+                    child: Obx(() => CustomButton(
+                          text: 'Sign In',
+                          isLoading: controller.isLoading.value,
+                          onPressed: controller.login,
+                        )),
+                  ),
+                  const SizedBox(height: 28),
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    delay: const Duration(milliseconds: 140),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account? ",
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13.5,
+                            color: AppColors.textSecondary(context),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => Get.offNamed(AppRoutes.register),
+                          child: Text(
+                            'Sign up',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.primaryAccent(context),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    GestureDetector(
-                      onTap: () => Get.offNamed(AppRoutes.register),
-                      child: Text(
-                        'Sign up',
-                        style: AppTypography.bodySemiBold.copyWith(color: AppColors.primaryAccent(context)),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
