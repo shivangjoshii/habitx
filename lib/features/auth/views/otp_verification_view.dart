@@ -50,55 +50,61 @@ class OtpVerificationView extends GetView<AuthController> {
                     from: 10,
                     duration: const Duration(milliseconds: 320),
                     delay: const Duration(milliseconds: 60),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(
-                        6,
-                        (index) => SizedBox(
-                          width: 48,
-                          height: 56,
-                          child: Focus(
-                            onKeyEvent: (node, event) =>
-                                controller.handleOtpKey(index, event),
-                            child: TextField(
-                              controller: controller.otpControllers[index],
-                              focusNode: controller.otpFocusNodes[index],
-                              keyboardType: TextInputType.number,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary(context),
-                              ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(1),
-                              ],
-                              onChanged: (val) =>
-                                  controller.onOtpChanged(val, index),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AppColors.surfaceSecondary(context),
-                                contentPadding: EdgeInsets.zero,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: BorderSide(
-                                    color: AppColors.border(context),
-                                    width: 1.2,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final totalSpacing = 5 * 8.0;
+                        final boxWidth = ((constraints.maxWidth - totalSpacing) / 6).floorToDouble().clamp(36.0, 52.0);
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: List.generate(
+                            6,
+                            (index) => SizedBox(
+                              width: boxWidth,
+                              height: 56,
+                              child: Focus(
+                                onKeyEvent: (node, event) =>
+                                    controller.handleOtpKey(index, event),
+                                child: TextField(
+                                  controller: controller.otpControllers[index],
+                                  focusNode: controller.otpFocusNodes[index],
+                                  keyboardType: TextInputType.number,
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textPrimary(context),
                                   ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: BorderSide(
-                                    color: AppColors.primaryAccent(context),
-                                    width: 1.8,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(1),
+                                  ],
+                                  onChanged: (val) =>
+                                      controller.onOtpChanged(val, index),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: AppColors.surfaceSecondary(context),
+                                    contentPadding: EdgeInsets.zero,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                      borderSide: BorderSide(
+                                        color: AppColors.border(context),
+                                        width: 1.2,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                      borderSide: BorderSide(
+                                        color: AppColors.primaryAccent(context),
+                                        width: 1.8,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -110,54 +116,90 @@ class OtpVerificationView extends GetView<AuthController> {
                       final isBusy = controller.isLoading.value;
                       final isSuccess = controller.isSuccess.value;
 
-                      return SizedBox(
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 350),
+                        curve: Curves.easeInOut,
                         width: double.infinity,
                         height: 50,
-                        child: ElevatedButton(
-                          onPressed: (isBusy || isSuccess)
-                              ? null
-                              : controller.verifyOtp,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: isSuccess
-                                ? AppColors.success(context)
-                                : AppColors.primaryAccent(context),
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                        decoration: BoxDecoration(
+                          color: isSuccess
+                              ? AppColors.success(context)
+                              : AppColors.primaryAccent(context),
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: isSuccess
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.success(context).withValues(alpha: 0.35),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(14),
+                            onTap: (isBusy || isSuccess)
+                                ? null
+                                : controller.verifyOtp,
+                            child: Center(
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 250),
+                                transitionBuilder: (child, animation) =>
+                                    ScaleTransition(scale: animation, child: child),
+                                child: isBusy
+                                    ? const SizedBox(
+                                        key: ValueKey('loader'),
+                                        width: 24,
+                                        height: 24,
+                                        child: HabitXLoader(size: 24),
+                                      )
+                                    : isSuccess
+                                        ? const Row(
+                                            key: ValueKey('success'),
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.check_circle_rounded,
+                                                color: Colors.white,
+                                                size: 22,
+                                              ),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                'Verified',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Row(
+                                            key: ValueKey('default'),
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Verify & Continue',
+                                                style: GoogleFonts.plusJakartaSans(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              const Icon(
+                                                Icons.arrow_forward_rounded,
+                                                size: 18,
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                              ),
                             ),
                           ),
-                          child: isBusy
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: HabitXLoader(size: 24),
-                                )
-                              : isSuccess
-                                  ? const Icon(
-                                      Icons.check_rounded,
-                                      color: Colors.white,
-                                      size: 24,
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Verify & Continue',
-                                          style: GoogleFonts.plusJakartaSans(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        const Icon(
-                                          Icons.arrow_forward_rounded,
-                                          size: 18,
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    ),
                         ),
                       );
                     }),

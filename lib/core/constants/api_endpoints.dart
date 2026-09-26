@@ -5,7 +5,7 @@ class ApiEndpoints {
     if (kIsWeb) {
       return 'http://localhost:5000/api/v1';
     } else if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.190.44.188:5000/api/v1';
+      return 'http://10.190.44.185:5000/api/v1';
     } else {
       return 'http://localhost:5000/api/v1';
     }

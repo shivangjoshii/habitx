@@ -55,6 +55,46 @@ class StorageService extends GetxService {
     await _box.write(AppConstants.storageThemeKey, theme);
   }
 
+  bool getRememberMe() {
+    return _box.read<bool>('remember_me') ?? false;
+  }
+
+  Future<void> setRememberMe(bool value) async {
+    await _box.write('remember_me', value);
+  }
+
+  String? getRememberEmail() {
+    return _box.read<String>('remember_email');
+  }
+
+  Future<void> setRememberEmail(String email) async {
+    await _box.write('remember_email', email);
+  }
+
+  Future<void> clearRememberEmail() async {
+    await _box.remove('remember_email');
+  }
+
+  String? getRememberPassword() {
+    return _box.read<String>('remember_password');
+  }
+
+  Future<void> setRememberPassword(String password) async {
+    await _box.write('remember_password', password);
+  }
+
+  Future<void> clearRememberPassword() async {
+    await _box.remove('remember_password');
+  }
+
+  String? getLastAuthMethod() {
+    return _box.read<String>('last_auth_method');
+  }
+
+  Future<void> setLastAuthMethod(String method) async {
+    await _box.write('last_auth_method', method);
+  }
+
   bool get isLoggedIn {
     final token = getAccessToken();
     return token != null && token.isNotEmpty;

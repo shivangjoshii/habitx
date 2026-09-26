@@ -16,7 +16,6 @@ class ConnectivityService extends GetxService {
 
   String? previousRoute;
   Timer? _redirectTimer;
-  SnackbarController? _offlineSnackbar;
   late StreamSubscription<List<ConnectivityResult>> _subscription;
 
   Future<ConnectivityService> init() async {
@@ -91,7 +90,7 @@ class ConnectivityService extends GetxService {
   void _showOfflineSnackbar() {
     _dismissOfflineSnackbar();
 
-    _offlineSnackbar = Get.rawSnackbar(
+    Get.rawSnackbar(
       snackPosition: SnackPosition.TOP,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       borderRadius: 16,

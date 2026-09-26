@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "795844644004",
+    "project_id": "habitx-215c8",
+    "storage_bucket": "habitx-215c8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795844644004:android:16acffa5225bde2f542a31",
+        "android_client_info": {
+          "package_name": "com.habitx.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcjRQGJTY-6sdmNAg-Jx63vzIqfhh38BM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

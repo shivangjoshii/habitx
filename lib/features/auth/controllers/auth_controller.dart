@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/routing/app_routes.dart';
@@ -12,6 +13,9 @@ import '../../../core/utils/custom_snackbar.dart';
 class AuthController extends GetxController {
   final ApiClient _apiClient = Get.find<ApiClient>();
   final StorageService _storageService = Get.find<StorageService>();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
 
   final loginEmailController = TextEditingController();
   final loginPasswordController = TextEditingController();
@@ -31,7 +35,11 @@ class AuthController extends GetxController {
   final resetConfirmPasswordController = TextEditingController();
 
   final RxBool isLoading = false.obs;
+  final RxBool isGoogleLoading = false.obs;
   final RxBool isSuccess = false.obs;
+  final RxBool rememberMe = false.obs;
+  final RxString lastAuthMethod = ''.obs;
+
   final RxString otpFlowType = 'registration'.obs;
   final RxString otpTarget = ''.obs;
   final RxString verifiedResetOtp = ''.obs;
@@ -40,6 +48,37 @@ class AuthController extends GetxController {
   Timer? _timer;
 
   String get fullOtp => otpControllers.map((c) => c.text.trim()).join();
+
+  bool _isValidEmail(String email) {
+    final clean = email.trim().toLowerCase();
+    if (clean.isEmpty) return false;
+    return RegExp(r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$').hasMatch(clean);
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadSavedPreferences();
+  }
+
+  void _loadSavedPreferences() {
+    rememberMe.value = _storageService.getRememberMe();
+    if (rememberMe.value) {
+      final savedEmail = _storageService.getRememberEmail();
+      final savedPassword = _storageService.getRememberPassword();
+      if (savedEmail != null && savedEmail.isNotEmpty) {
+        loginEmailController.text = savedEmail;
+      }
+      if (savedPassword != null && savedPassword.isNotEmpty) {
+        loginPasswordController.text = savedPassword;
+      }
+    }
+    lastAuthMethod.value = _storageService.getLastAuthMethod() ?? '';
+  }
+
+  void toggleRememberMe(bool? val) {
+    rememberMe.value = val ?? false;
+  }
 
   void clearOtp() {
     for (var c in otpControllers) {
@@ -91,7 +130,7 @@ class AuthController extends GetxController {
     final email = loginEmailController.text.trim();
     final password = loginPasswordController.text;
 
-    if (email.isEmpty || !GetUtils.isEmail(email)) {
+    if (email.isEmpty || !_isValidEmail(email)) {
       CustomSnackbar.showError(title: 'Invalid Email', message: 'Please enter a valid email address.');
       return;
     }
@@ -105,7 +144,7 @@ class AuthController extends GetxController {
       isLoading.value = true;
       final response = await _apiClient.post(
         ApiEndpoints.login,
-        data: {'email': email, 'password': password},
+        data: {'email': email.toLowerCase(), 'password': password},
       );
 
       if (response.statusCode == 200 && response.data['success'] == true) {
@@ -116,6 +155,19 @@ class AuthController extends GetxController {
         await _storageService.saveAccessToken(tokens['accessToken']);
         await _storageService.saveRefreshToken(tokens['refreshToken']);
         await _storageService.saveUser(user);
+
+        if (rememberMe.value) {
+          await _storageService.setRememberMe(true);
+          await _storageService.setRememberEmail(email);
+          await _storageService.setRememberPassword(password);
+        } else {
+          await _storageService.setRememberMe(false);
+          await _storageService.clearRememberEmail();
+          await _storageService.clearRememberPassword();
+        }
+
+        await _storageService.setLastAuthMethod('manual');
+        lastAuthMethod.value = 'manual';
 
         CustomSnackbar.showSuccess(title: 'Welcome Back', message: 'Signed in successfully.');
         Get.offAllNamed(AppRoutes.dashboard);
@@ -130,6 +182,55 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> loginWithGoogle() async {
+    try {
+      isGoogleLoading.value = true;
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final token = googleAuth.idToken ?? googleAuth.accessToken ?? 'google_auth_token';
+
+      final response = await _apiClient.post(
+        '/auth/oauth',
+        data: {
+          'provider': 'google',
+          'email': googleUser.email,
+          'name': googleUser.displayName ?? 'Focus Champion',
+          'providerId': googleUser.id,
+          'token': token,
+        },
+      );
+
+      if (response.statusCode == 200 && response.data['success'] == true) {
+        final data = response.data['data'];
+        final tokens = data['tokens'];
+        final user = data['user'];
+
+        await _storageService.saveAccessToken(tokens['accessToken']);
+        await _storageService.saveRefreshToken(tokens['refreshToken']);
+        await _storageService.saveUser(user);
+
+        await _storageService.setLastAuthMethod('google');
+        lastAuthMethod.value = 'google';
+
+        CustomSnackbar.showSuccess(title: 'Google Sign In', message: 'Signed in with Google successfully.');
+        Get.offAllNamed(AppRoutes.dashboard);
+      }
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] ?? 'Google sign in failed.';
+      CustomSnackbar.showError(title: 'Google Auth Error', message: msg);
+    } catch (e) {
+      debugPrint('Google Sign-In Error: $e');
+      CustomSnackbar.showError(title: 'Google Sign In', message: 'Unable to complete Google sign in: $e');
+    } finally {
+      isGoogleLoading.value = false;
+    }
+  }
+
   Future<void> register() async {
     final name = registerNameController.text.trim();
     final email = registerEmailController.text.trim();
@@ -140,7 +241,7 @@ class AuthController extends GetxController {
       return;
     }
 
-    if (email.isEmpty || !GetUtils.isEmail(email)) {
+    if (email.isEmpty || !_isValidEmail(email)) {
       CustomSnackbar.showError(title: 'Invalid Email', message: 'Please enter a valid email address.');
       return;
     }
@@ -154,7 +255,7 @@ class AuthController extends GetxController {
       isLoading.value = true;
       final response = await _apiClient.post(
         ApiEndpoints.register,
-        data: {'name': name, 'email': email, 'password': password},
+        data: {'name': name, 'email': email.toLowerCase(), 'password': password},
       );
 
       if (response.statusCode == 201 && response.data['success'] == true) {
@@ -167,7 +268,7 @@ class AuthController extends GetxController {
         await _storageService.saveUser(user);
 
         otpFlowType.value = 'registration';
-        otpTarget.value = email;
+        otpTarget.value = email.toLowerCase();
         clearOtp();
         startResendCountdown();
 
@@ -190,7 +291,7 @@ class AuthController extends GetxController {
 
   Future<void> sendForgotPasswordOtpFromSheet() async {
     final email = forgotSheetEmailController.text.trim();
-    if (email.isEmpty || !GetUtils.isEmail(email)) {
+    if (email.isEmpty || !_isValidEmail(email)) {
       CustomSnackbar.showError(title: 'Invalid Email', message: 'Enter your registered email address.');
       return;
     }
@@ -199,13 +300,13 @@ class AuthController extends GetxController {
       isLoading.value = true;
       final response = await _apiClient.post(
         ApiEndpoints.forgotPassword,
-        data: {'email': email},
+        data: {'email': email.toLowerCase()},
       );
 
       if (response.statusCode == 200) {
         Get.back();
         otpFlowType.value = 'forgotPassword';
-        otpTarget.value = email;
+        otpTarget.value = email.toLowerCase();
         clearOtp();
         startResendCountdown();
 
