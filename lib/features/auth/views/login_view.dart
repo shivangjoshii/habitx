@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_curved_bottom_sheet.dart';
 import '../../../core/widgets/curved_auth_header.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
@@ -12,6 +13,35 @@ import '../controllers/auth_controller.dart';
 
 class LoginView extends GetView<AuthController> {
   const LoginView({super.key});
+
+  void _showForgotPasswordSheet(BuildContext context) {
+    AppCurvedBottomSheet.show(
+      context,
+      title: 'Forgot Password',
+      subtitle: 'Enter your registered email to receive a 6-digit OTP code.',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextField(
+            label: 'Registered Email',
+            hintText: 'name@example.com',
+            controller: controller.forgotSheetEmailController,
+            keyboardType: TextInputType.emailAddress,
+            prefixIcon: Icon(Iconsax.sms_copy, size: 18, color: AppColors.textTertiary(context)),
+          ),
+          const SizedBox(height: 24),
+          Obx(
+            () => CustomButton(
+              text: 'Send Verification Code',
+              isLoading: controller.isLoading.value,
+              onPressed: controller.sendForgotPasswordOtpFromSheet,
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +95,7 @@ class LoginView extends GetView<AuthController> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () => Get.toNamed(AppRoutes.forgotPassword),
+                        onPressed: () => _showForgotPasswordSheet(context),
                         style: TextButton.styleFrom(padding: EdgeInsets.zero),
                         child: Text(
                           'Forgot password?',

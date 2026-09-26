@@ -1,9 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/focus_orb_widget.dart';
 import '../controllers/auth_controller.dart';
@@ -22,46 +22,45 @@ class WelcomeView extends GetView<AuthController> {
             children: [
               const Spacer(),
               FadeInDown(
-                duration: const Duration(milliseconds: 800),
+                duration: const Duration(milliseconds: 700),
                 child: const FocusOrbWidget(size: 80),
               ),
               const SizedBox(height: 36),
               FadeInUp(
-                duration: const Duration(milliseconds: 600),
+                duration: const Duration(milliseconds: 500),
                 child: Text(
                   'Take back your attention.',
                   textAlign: TextAlign.center,
-                  style: AppTypography.largeHeading.copyWith(
-                    color: AppColors.textPrimary(context),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 26,
                     fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary(context),
+                    letterSpacing: -0.4,
                   ),
                 ),
               ),
               const SizedBox(height: 12),
               FadeInUp(
-                duration: const Duration(milliseconds: 600),
-                delay: const Duration(milliseconds: 150),
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 100),
                 child: Column(
                   children: [
                     Text(
-                      'Focus better.',
-                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
-                    ),
-                    Text(
-                      'Scroll less.',
-                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
-                    ),
-                    Text(
-                      'Build better habits.',
-                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
+                      'Focus better. Scroll less. Build lasting habits.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        color: AppColors.textSecondary(context),
+                        height: 1.4,
+                      ),
                     ),
                   ],
                 ),
               ),
               const Spacer(),
               FadeInUp(
-                duration: const Duration(milliseconds: 600),
-                delay: const Duration(milliseconds: 250),
+                duration: const Duration(milliseconds: 400),
+                delay: const Duration(milliseconds: 150),
                 child: CustomButton(
                   text: 'Get Started',
                   onPressed: () => Get.toNamed(AppRoutes.register),
@@ -69,39 +68,15 @@ class WelcomeView extends GetView<AuthController> {
               ),
               const SizedBox(height: 12),
               FadeInUp(
-                duration: const Duration(milliseconds: 600),
-                delay: const Duration(milliseconds: 350),
+                duration: const Duration(milliseconds: 400),
+                delay: const Duration(milliseconds: 200),
                 child: CustomButton(
                   text: 'Sign In',
                   isSecondary: true,
                   onPressed: () => Get.toNamed(AppRoutes.login),
                 ),
               ),
-              const SizedBox(height: 16),
-              FadeInUp(
-                duration: const Duration(milliseconds: 600),
-                delay: const Duration(milliseconds: 450),
-                child: Obx(() => TextButton(
-                      onPressed: controller.isGuestLoading.value ? null : controller.guestLogin,
-                      child: controller.isGuestLoading.value
-                          ? SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.textTertiary(context)),
-                              ),
-                            )
-                          : Text(
-                              'Continue as Guest',
-                              style: AppTypography.button.copyWith(
-                                color: AppColors.textTertiary(context),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                    )),
-              ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 24),
             ],
           ),
         ),

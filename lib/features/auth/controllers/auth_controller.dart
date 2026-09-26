@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/api_client.dart';
@@ -19,24 +20,67 @@ class AuthController extends GetxController {
   final registerEmailController = TextEditingController();
   final registerPasswordController = TextEditingController();
 
-  final otpController = TextEditingController();
-  final forgotEmailController = TextEditingController();
-  final resetOtpController = TextEditingController();
+  final forgotSheetEmailController = TextEditingController();
+
+  final List<TextEditingController> otpControllers =
+      List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> otpFocusNodes =
+      List.generate(6, (_) => FocusNode());
+
   final resetNewPasswordController = TextEditingController();
+  final resetConfirmPasswordController = TextEditingController();
 
   final RxBool isLoading = false.obs;
-  final RxBool isGuestLoading = false.obs;
-  final RxString pendingVerificationEmail = ''.obs;
+  final RxBool isSuccess = false.obs;
+  final RxString otpFlowType = 'registration'.obs;
+  final RxString otpTarget = ''.obs;
+  final RxString verifiedResetOtp = ''.obs;
 
-  final RxInt resendTimer = 60.obs;
+  final RxInt timerSeconds = 60.obs;
   Timer? _timer;
 
+  String get fullOtp => otpControllers.map((c) => c.text.trim()).join();
+
+  void clearOtp() {
+    for (var c in otpControllers) {
+      c.clear();
+    }
+    if (otpFocusNodes.isNotEmpty) {
+      otpFocusNodes[0].requestFocus();
+    }
+  }
+
+  void onOtpChanged(String value, int index) {
+    if (value.isNotEmpty) {
+      if (index < 5) {
+        otpFocusNodes[index + 1].requestFocus();
+      } else {
+        otpFocusNodes[index].unfocus();
+        if (fullOtp.length == 6) {
+          verifyOtp();
+        }
+      }
+    }
+  }
+
+  KeyEventResult handleOtpKey(int index, KeyEvent event) {
+    if (event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.backspace) {
+      if (otpControllers[index].text.isEmpty && index > 0) {
+        otpFocusNodes[index - 1].requestFocus();
+        otpControllers[index - 1].clear();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
+  }
+
   void startResendCountdown() {
-    resendTimer.value = 60;
+    timerSeconds.value = 60;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (resendTimer.value > 0) {
-        resendTimer.value--;
+      if (timerSeconds.value > 0) {
+        timerSeconds.value--;
       } else {
         timer.cancel();
       }
@@ -122,7 +166,9 @@ class AuthController extends GetxController {
         await _storageService.saveRefreshToken(tokens['refreshToken']);
         await _storageService.saveUser(user);
 
-        pendingVerificationEmail.value = email;
+        otpFlowType.value = 'registration';
+        otpTarget.value = email;
+        clearOtp();
         startResendCountdown();
 
         CustomSnackbar.showSuccess(
@@ -142,105 +188,10 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> verifyEmail() async {
-    final otp = otpController.text.trim();
-    final email = pendingVerificationEmail.value;
-
-    if (otp.length != 6) {
-      CustomSnackbar.showError(title: 'Invalid OTP', message: 'Please enter the 6-digit verification code.');
-      return;
-    }
-
-    try {
-      isLoading.value = true;
-      final response = await _apiClient.post(
-        ApiEndpoints.verifyEmail,
-        data: {'email': email, 'otp': otp},
-      );
-
-      if (response.statusCode == 200 && response.data['success'] == true) {
-        final data = response.data['data'];
-        final tokens = data['tokens'];
-        final user = data['user'];
-
-        await _storageService.saveAccessToken(tokens['accessToken']);
-        await _storageService.saveRefreshToken(tokens['refreshToken']);
-        await _storageService.saveUser(user);
-
-        CustomSnackbar.showSuccess(
-          title: 'Email Verified',
-          message: 'Your account is ready. Welcome to HabitX!',
-        );
-
-        Get.offAllNamed(AppRoutes.dashboard);
-      }
-    } on DioException catch (e) {
-      final msg = e.response?.data?['message'] ?? 'Invalid verification code.';
-      CustomSnackbar.showError(title: 'Verification Failed', message: msg);
-    } catch (_) {
-      CustomSnackbar.showError(title: 'Connection Error', message: 'Unable to verify code.');
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> resendVerificationOtp() async {
-    if (resendTimer.value > 0) return;
-
-    final email = pendingVerificationEmail.value;
-    try {
-      final response = await _apiClient.post(
-        ApiEndpoints.resendOtp,
-        data: {'email': email},
-      );
-
-      if (response.statusCode == 200) {
-        startResendCountdown();
-        CustomSnackbar.showSuccess(
-          title: 'OTP Resent',
-          message: 'A new verification code has been dispatched.',
-        );
-      }
-    } catch (_) {
-      CustomSnackbar.showError(title: 'Resend Failed', message: 'Could not send verification code.');
-    }
-  }
-
-  Future<void> guestLogin() async {
-    try {
-      isGuestLoading.value = true;
-      final response = await _apiClient.post(ApiEndpoints.guestLogin, data: {});
-
-      if (response.statusCode == 201 && response.data['success'] == true) {
-        final data = response.data['data'];
-        final tokens = data['tokens'];
-        final user = data['user'];
-
-        await _storageService.saveAccessToken(tokens['accessToken']);
-        await _storageService.saveRefreshToken(tokens['refreshToken']);
-        await _storageService.saveUser(user);
-
-        CustomSnackbar.showSuccess(
-          title: 'Guest Session Active',
-          message: 'Exploring in local guest mode.',
-        );
-
-        Get.offAllNamed(AppRoutes.dashboard);
-      }
-    } on DioException catch (e) {
-      final msg = e.response?.data?['message'] ?? 'Could not start guest session.';
-      CustomSnackbar.showError(title: 'Guest Mode Error', message: msg);
-    } catch (_) {
-      CustomSnackbar.showError(title: 'Connection Error', message: 'Unable to reach server.');
-    } finally {
-      isGuestLoading.value = false;
-    }
-  }
-
-  Future<void> sendForgotPasswordOtp() async {
-    final email = forgotEmailController.text.trim();
+  Future<void> sendForgotPasswordOtpFromSheet() async {
+    final email = forgotSheetEmailController.text.trim();
     if (email.isEmpty || !GetUtils.isEmail(email)) {
-      CustomSnackbar.showError(title: 'Invalid Email', message: 'Enter your registered email.');
+      CustomSnackbar.showError(title: 'Invalid Email', message: 'Enter your registered email address.');
       return;
     }
 
@@ -252,33 +203,127 @@ class AuthController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        pendingVerificationEmail.value = email;
+        Get.back();
+        otpFlowType.value = 'forgotPassword';
+        otpTarget.value = email;
+        clearOtp();
+        startResendCountdown();
+
         CustomSnackbar.showSuccess(
           title: 'Code Dispatched',
-          message: 'If registered, a reset code was sent to your email.',
+          message: '6-digit reset code sent to $email.',
         );
+
+        Get.toNamed(AppRoutes.otpVerification);
       }
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] ?? 'Could not dispatch reset code.';
+      CustomSnackbar.showError(title: 'Error', message: msg);
     } catch (_) {
-      CustomSnackbar.showError(title: 'Error', message: 'Could not request password reset.');
+      CustomSnackbar.showError(title: 'Connection Error', message: 'Unable to connect to server.');
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> resetPassword() async {
-    final email = pendingVerificationEmail.value.isNotEmpty
-        ? pendingVerificationEmail.value
-        : forgotEmailController.text.trim();
-    final otp = resetOtpController.text.trim();
-    final newPassword = resetNewPasswordController.text;
+  Future<void> verifyOtp() async {
+    final otp = fullOtp;
+    final email = otpTarget.value;
 
     if (otp.length != 6) {
-      CustomSnackbar.showError(title: 'Invalid OTP', message: 'Enter the 6-digit reset code.');
+      CustomSnackbar.showError(title: 'Incomplete Code', message: 'Please enter all 6 digits.');
       return;
     }
 
+    try {
+      isLoading.value = true;
+
+      if (otpFlowType.value == 'registration') {
+        final response = await _apiClient.post(
+          ApiEndpoints.verifyEmail,
+          data: {'email': email, 'otp': otp},
+        );
+
+        if (response.statusCode == 200 && response.data['success'] == true) {
+          isSuccess.value = true;
+          final data = response.data['data'];
+          final tokens = data['tokens'];
+          final user = data['user'];
+
+          await _storageService.saveAccessToken(tokens['accessToken']);
+          await _storageService.saveRefreshToken(tokens['refreshToken']);
+          await _storageService.saveUser(user);
+
+          CustomSnackbar.showSuccess(
+            title: 'Email Verified',
+            message: 'Your account is ready. Welcome to HabitX!',
+          );
+
+          await Future.delayed(const Duration(milliseconds: 300));
+          Get.offAllNamed(AppRoutes.dashboard);
+        }
+      } else {
+        verifiedResetOtp.value = otp;
+        isSuccess.value = true;
+
+        CustomSnackbar.showSuccess(
+          title: 'Code Verified',
+          message: 'Please set your new password.',
+        );
+
+        await Future.delayed(const Duration(milliseconds: 300));
+        Get.offNamed(AppRoutes.forgotPassword);
+      }
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] ?? 'Invalid verification code.';
+      CustomSnackbar.showError(title: 'Verification Failed', message: msg);
+    } catch (_) {
+      CustomSnackbar.showError(title: 'Connection Error', message: 'Unable to verify code.');
+    } finally {
+      isLoading.value = false;
+      isSuccess.value = false;
+    }
+  }
+
+  Future<void> resendOtp() async {
+    if (timerSeconds.value > 0) return;
+
+    final email = otpTarget.value;
+    final endpoint = otpFlowType.value == 'registration'
+        ? ApiEndpoints.resendOtp
+        : ApiEndpoints.forgotPassword;
+
+    try {
+      final response = await _apiClient.post(
+        endpoint,
+        data: {'email': email},
+      );
+
+      if (response.statusCode == 200) {
+        startResendCountdown();
+        CustomSnackbar.showSuccess(
+          title: 'Code Resent',
+          message: 'A new 6-digit code has been dispatched.',
+        );
+      }
+    } catch (_) {
+      CustomSnackbar.showError(title: 'Resend Failed', message: 'Could not send verification code.');
+    }
+  }
+
+  Future<void> resetPassword() async {
+    final email = otpTarget.value;
+    final otp = verifiedResetOtp.value;
+    final newPassword = resetNewPasswordController.text;
+    final confirmPassword = resetConfirmPasswordController.text;
+
     if (newPassword.length < 6) {
       CustomSnackbar.showError(title: 'Weak Password', message: 'Password must be at least 6 characters.');
+      return;
+    }
+
+    if (newPassword != confirmPassword) {
+      CustomSnackbar.showError(title: 'Mismatch', message: 'Passwords do not match.');
       return;
     }
 
@@ -294,7 +339,9 @@ class AuthController extends GetxController {
           title: 'Password Updated',
           message: 'You can now sign in with your new password.',
         );
-        Get.offNamed(AppRoutes.login);
+        resetNewPasswordController.clear();
+        resetConfirmPasswordController.clear();
+        Get.offAllNamed(AppRoutes.login);
       }
     } on DioException catch (e) {
       final msg = e.response?.data?['message'] ?? 'Password reset failed.';

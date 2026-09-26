@@ -134,14 +134,16 @@ class CurvedAuthHeader extends StatelessWidget {
                 right: -20,
                 width: 220,
                 height: 220,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        Colors.white.withValues(alpha: 0.18),
-                        Colors.white.withValues(alpha: 0.0),
-                      ],
+                child: IgnorePointer(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          Colors.white.withValues(alpha: 0.18),
+                          Colors.white.withValues(alpha: 0.0),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -161,100 +163,114 @@ class CurvedAuthHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              if (showBackButton)
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: GestureDetector(
-                    onTap: onBack ?? () => Get.back(),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.35),
-                          width: 1,
+              IgnorePointer(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Spacer(),
+                      FadeInUp(
+                        from: 10,
+                        duration: const Duration(milliseconds: 320),
+                        child: Text(
+                          title,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 27,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            letterSpacing: -0.5,
+                            height: 1.18,
+                          ),
                         ),
                       ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: Colors.white,
-                        size: 18,
+                      const SizedBox(height: 6),
+                      FadeInUp(
+                        from: 8,
+                        duration: const Duration(milliseconds: 340),
+                        delay: const Duration(milliseconds: 60),
+                        child: Text(
+                          subtitle,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13.5,
+                            color: Colors.white.withValues(alpha: 0.94),
+                            height: 1.38,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 55),
+                    ],
+                  ),
+                ),
+              ),
+              if (showBackButton)
+                Positioned(
+                  top: 10,
+                  left: 14,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(22),
+                      onTap: onBack ?? () => Get.back(),
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.22),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.38),
+                            width: 1,
+                          ),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
               if (showActionButton)
                 Positioned(
-                  top: 12,
-                  right: 12,
-                  child: GestureDetector(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      if (onAction != null) {
-                        onAction!();
-                      }
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.35),
-                          width: 1,
+                  top: 10,
+                  right: 14,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(22),
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        if (onAction != null) {
+                          onAction!();
+                        }
+                      },
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.22),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.38),
+                            width: 1,
+                          ),
                         ),
-                      ),
-                      child: Icon(
-                        actionIcon,
-                        color: Colors.white,
-                        size: 20,
+                        child: Center(
+                          child: Icon(
+                            actionIcon,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Spacer(),
-                    FadeInUp(
-                      from: 10,
-                      duration: const Duration(milliseconds: 320),
-                      child: Text(
-                        title,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 27,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: -0.5,
-                          height: 1.18,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    FadeInUp(
-                      from: 8,
-                      duration: const Duration(milliseconds: 340),
-                      delay: const Duration(milliseconds: 60),
-                      child: Text(
-                        subtitle,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 13.5,
-                          color: Colors.white.withValues(alpha: 0.94),
-                          height: 1.38,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 55),
-                  ],
-                ),
-              ),
             ],
           ),
         ),

@@ -20,8 +20,8 @@ class ForgotPasswordView extends GetView<AuthController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CurvedAuthHeader(
-              title: 'Reset Password',
-              subtitle: 'Request an OTP verification code to reset your account credentials.',
+              title: 'New Password',
+              subtitle: 'Create a secure new password to access your account.',
               showBackButton: true,
               height: 275,
               onBack: () => Get.back(),
@@ -34,47 +34,6 @@ class ForgotPasswordView extends GetView<AuthController> {
                   FadeInUp(
                     from: 10,
                     duration: const Duration(milliseconds: 320),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: CustomTextField(
-                            label: 'Registered Email',
-                            hintText: 'name@example.com',
-                            controller: controller.forgotEmailController,
-                            keyboardType: TextInputType.emailAddress,
-                            prefixIcon: Icon(Iconsax.sms_copy, size: 18, color: AppColors.textTertiary(context)),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        CustomButton(
-                          text: 'Send OTP',
-                          width: 100,
-                          height: 48,
-                          isLoading: controller.isLoading.value,
-                          onPressed: controller.sendForgotPasswordOtp,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  FadeInUp(
-                    from: 10,
-                    duration: const Duration(milliseconds: 320),
-                    delay: const Duration(milliseconds: 50),
-                    child: CustomTextField(
-                      label: '6-Digit Reset Code',
-                      hintText: '123456',
-                      controller: controller.resetOtpController,
-                      keyboardType: TextInputType.number,
-                      prefixIcon: Icon(Iconsax.key_copy, size: 18, color: AppColors.textTertiary(context)),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  FadeInUp(
-                    from: 10,
-                    duration: const Duration(milliseconds: 320),
-                    delay: const Duration(milliseconds: 100),
                     child: CustomTextField(
                       label: 'New Password',
                       hintText: 'At least 6 characters',
@@ -83,16 +42,31 @@ class ForgotPasswordView extends GetView<AuthController> {
                       prefixIcon: Icon(Iconsax.lock_copy, size: 18, color: AppColors.textTertiary(context)),
                     ),
                   ),
+                  const SizedBox(height: 18),
+                  FadeInUp(
+                    from: 10,
+                    duration: const Duration(milliseconds: 320),
+                    delay: const Duration(milliseconds: 60),
+                    child: CustomTextField(
+                      label: 'Confirm New Password',
+                      hintText: 'Repeat password',
+                      controller: controller.resetConfirmPasswordController,
+                      isPassword: true,
+                      prefixIcon: Icon(Iconsax.lock_copy, size: 18, color: AppColors.textTertiary(context)),
+                    ),
+                  ),
                   const SizedBox(height: 28),
                   FadeInUp(
                     from: 10,
                     duration: const Duration(milliseconds: 320),
-                    delay: const Duration(milliseconds: 140),
-                    child: Obx(() => CustomButton(
-                          text: 'Update Password',
-                          isLoading: controller.isLoading.value,
-                          onPressed: controller.resetPassword,
-                        )),
+                    delay: const Duration(milliseconds: 100),
+                    child: Obx(
+                      () => CustomButton(
+                        text: 'Save New Password',
+                        isLoading: controller.isLoading.value,
+                        onPressed: controller.resetPassword,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 24),
                 ],
