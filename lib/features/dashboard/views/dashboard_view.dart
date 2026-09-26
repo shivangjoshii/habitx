@@ -14,15 +14,15 @@ class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: Column(
           children: [
             const OfflineBanner(),
             Expanded(
               child: RefreshIndicator(
-                color: AppColors.lavenderLight,
-                backgroundColor: AppColors.darkSurface,
+                color: AppColors.primaryAccent(context),
+                backgroundColor: AppColors.surface(context),
                 onRefresh: controller.fetchDashboardData,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -38,25 +38,25 @@ class DashboardView extends GetView<DashboardController> {
                             children: [
                               Text(
                                 controller.greeting,
-                                style: AppTypography.secondary.copyWith(color: AppColors.darkTextSecondary),
+                                style: AppTypography.secondary.copyWith(color: AppColors.textSecondary(context)),
                               ),
                               const SizedBox(height: 2),
                               Obx(() => Text(
                                     '${controller.userName.value} 👋',
                                     style: AppTypography.largeHeading.copyWith(
-                                      color: AppColors.darkTextPrimary,
+                                      color: AppColors.textPrimary(context),
                                       fontSize: 22,
                                     ),
                                   )),
                               const SizedBox(height: 2),
                               Text(
                                 controller.formattedDate,
-                                style: AppTypography.caption.copyWith(color: AppColors.darkTextTertiary),
+                                style: AppTypography.caption.copyWith(color: AppColors.textTertiary(context)),
                               ),
                             ],
                           ),
                           IconButton(
-                            icon: const Icon(Iconsax.logout_copy, color: AppColors.darkTextTertiary, size: 20),
+                            icon: Icon(Iconsax.logout_copy, color: AppColors.textTertiary(context), size: 20),
                             onPressed: controller.logout,
                           ),
                         ],
@@ -67,9 +67,9 @@ class DashboardView extends GetView<DashboardController> {
                         child: Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: AppColors.darkSurface,
+                            color: AppColors.surface(context),
                             borderRadius: BorderRadius.circular(18),
-                            border: Border.all(color: AppColors.darkBorder),
+                            border: Border.all(color: AppColors.border(context)),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,31 +83,31 @@ class DashboardView extends GetView<DashboardController> {
                                       Obx(() => Text(
                                             '${controller.focusedTodayMinutes.value}m',
                                             style: AppTypography.largeMetric.copyWith(
-                                              color: AppColors.lavenderLight,
+                                              color: AppColors.primaryAccent(context),
                                               fontSize: 38,
                                             ),
                                           )),
                                       Text(
                                         'focused today',
-                                        style: AppTypography.secondary.copyWith(color: AppColors.darkTextSecondary),
+                                        style: AppTypography.secondary.copyWith(color: AppColors.textSecondary(context)),
                                       ),
                                     ],
                                   ),
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     decoration: BoxDecoration(
-                                      color: AppColors.darkSurfaceSecondary,
+                                      color: AppColors.surfaceSecondary(context),
                                       borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(color: AppColors.darkBorder),
+                                      border: Border.all(color: AppColors.border(context)),
                                     ),
                                     child: Obx(() => Row(
                                           children: [
-                                            const Icon(Iconsax.flash_copy, color: AppColors.warningDark, size: 16),
+                                            Icon(Iconsax.flash_copy, color: AppColors.warning(context), size: 16),
                                             const SizedBox(width: 6),
                                             Text(
                                               '${controller.streakDays.value}d streak',
                                               style: AppTypography.caption.copyWith(
-                                                color: AppColors.darkTextPrimary,
+                                                color: AppColors.textPrimary(context),
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
@@ -122,14 +122,14 @@ class DashboardView extends GetView<DashboardController> {
                                     child: LinearProgressIndicator(
                                       value: controller.goalProgress,
                                       minHeight: 6,
-                                      backgroundColor: AppColors.darkSurfaceSecondary,
-                                      valueColor: const AlwaysStoppedAnimation<Color>(AppColors.lavenderLight),
+                                      backgroundColor: AppColors.surfaceSecondary(context),
+                                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryAccent(context)),
                                     ),
                                   )),
                               const SizedBox(height: 8),
                               Obx(() => Text(
                                     '${(controller.goalProgress * 100).toInt()}% of daily goal (${controller.dailyGoalMinutes.value}m)',
-                                    style: AppTypography.caption.copyWith(color: AppColors.darkTextTertiary),
+                                    style: AppTypography.caption.copyWith(color: AppColors.textTertiary(context)),
                                   )),
                             ],
                           ),
@@ -141,7 +141,11 @@ class DashboardView extends GetView<DashboardController> {
                         delay: const Duration(milliseconds: 100),
                         child: CustomButton(
                           text: 'Start Focus',
-                          prefixIcon: const Icon(Iconsax.play_copy, size: 18, color: AppColors.darkBackground),
+                          prefixIcon: Icon(
+                            Iconsax.play_copy,
+                            size: 18,
+                            color: AppColors.isDark(context) ? AppColors.darkBackground : Colors.white,
+                          ),
                           onPressed: () {},
                         ),
                       ),
@@ -152,7 +156,7 @@ class DashboardView extends GetView<DashboardController> {
                         child: Text(
                           "TODAY'S HABITS",
                           style: AppTypography.caption.copyWith(
-                            color: AppColors.darkTextTertiary,
+                            color: AppColors.textTertiary(context),
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                           ),
@@ -165,9 +169,9 @@ class DashboardView extends GetView<DashboardController> {
                         child: Container(
                           padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
-                            color: AppColors.darkSurface,
+                            color: AppColors.surface(context),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.darkBorder),
+                            border: Border.all(color: AppColors.border(context)),
                           ),
                           child: Row(
                             children: [
@@ -175,11 +179,11 @@ class DashboardView extends GetView<DashboardController> {
                                 width: 38,
                                 height: 38,
                                 decoration: BoxDecoration(
-                                  color: AppColors.darkSurfaceSecondary,
+                                  color: AppColors.surfaceSecondary(context),
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: AppColors.darkBorder),
+                                  border: Border.all(color: AppColors.border(context)),
                                 ),
-                                child: const Icon(Iconsax.task_square_copy, size: 18, color: AppColors.lavenderLight),
+                                child: Icon(Iconsax.task_square_copy, size: 18, color: AppColors.primaryAccent(context)),
                               ),
                               const SizedBox(width: 14),
                               Expanded(
@@ -188,12 +192,12 @@ class DashboardView extends GetView<DashboardController> {
                                   children: [
                                     Text(
                                       'No habits logged yet today',
-                                      style: AppTypography.bodySemiBold.copyWith(color: AppColors.darkTextPrimary),
+                                      style: AppTypography.bodySemiBold.copyWith(color: AppColors.textPrimary(context)),
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
                                       'Habits keep your focus routine consistent',
-                                      style: AppTypography.caption.copyWith(color: AppColors.darkTextSecondary),
+                                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary(context)),
                                     ),
                                   ],
                                 ),
@@ -209,21 +213,21 @@ class DashboardView extends GetView<DashboardController> {
                         child: Container(
                           padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
-                            color: AppColors.darkSurface,
+                            color: AppColors.surface(context),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.lavenderSoftDark),
+                            border: Border.all(color: AppColors.lavenderSoft(context)),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
-                                  const Icon(Iconsax.magicpen_copy, size: 16, color: AppColors.lavenderLight),
+                                  Icon(Iconsax.magicpen_copy, size: 16, color: AppColors.primaryAccent(context)),
                                   const SizedBox(width: 8),
                                   Text(
                                     'AI FOCUS COMPANION',
                                     style: AppTypography.caption.copyWith(
-                                      color: AppColors.lavenderLight,
+                                      color: AppColors.primaryAccent(context),
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0.5,
                                     ),
@@ -233,12 +237,12 @@ class DashboardView extends GetView<DashboardController> {
                               const SizedBox(height: 10),
                               Text(
                                 'Your strongest focus window is in the evening between 7:00 PM and 9:00 PM.',
-                                style: AppTypography.body.copyWith(color: AppColors.darkTextPrimary),
+                                style: AppTypography.body.copyWith(color: AppColors.textPrimary(context)),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'Complete a 45-minute focus session today to maintain your streak.',
-                                style: AppTypography.secondary.copyWith(color: AppColors.darkTextSecondary),
+                                style: AppTypography.secondary.copyWith(color: AppColors.textSecondary(context)),
                               ),
                             ],
                           ),
@@ -254,16 +258,16 @@ class DashboardView extends GetView<DashboardController> {
         ),
       ),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.darkSurface,
-          border: Border(top: BorderSide(color: AppColors.darkBorder, width: 1)),
+        decoration: BoxDecoration(
+          color: AppColors.surface(context),
+          border: Border(top: BorderSide(color: AppColors.border(context), width: 1)),
         ),
         child: Obx(() => BottomNavigationBar(
               currentIndex: controller.selectedNavIndex.value,
               onTap: controller.onNavTapped,
-              backgroundColor: AppColors.darkSurface,
-              selectedItemColor: AppColors.lavenderLight,
-              unselectedItemColor: AppColors.darkTextTertiary,
+              backgroundColor: AppColors.surface(context),
+              selectedItemColor: AppColors.primaryAccent(context),
+              unselectedItemColor: AppColors.textTertiary(context),
               type: BottomNavigationBarType.fixed,
               selectedFontSize: 12,
               unselectedFontSize: 12,

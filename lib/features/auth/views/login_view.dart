@@ -15,10 +15,11 @@ class LoginView extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
+        backgroundColor: AppColors.background(context),
         leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_copy, color: AppColors.darkTextPrimary, size: 20),
+          icon: Icon(Iconsax.arrow_left_copy, color: AppColors.textPrimary(context), size: 20),
           onPressed: () => Get.back(),
         ),
       ),
@@ -32,7 +33,7 @@ class LoginView extends GetView<AuthController> {
                 duration: const Duration(milliseconds: 500),
                 child: Text(
                   'Welcome Back',
-                  style: AppTypography.largeHeading.copyWith(color: AppColors.darkTextPrimary),
+                  style: AppTypography.largeHeading.copyWith(color: AppColors.textPrimary(context)),
                 ),
               ),
               const SizedBox(height: 6),
@@ -41,7 +42,7 @@ class LoginView extends GetView<AuthController> {
                 delay: const Duration(milliseconds: 100),
                 child: Text(
                   'Enter your credentials to access your focus sanctuary.',
-                  style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                  style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                 ),
               ),
               const SizedBox(height: 32),
@@ -53,7 +54,7 @@ class LoginView extends GetView<AuthController> {
                   hintText: 'name@example.com',
                   controller: controller.loginEmailController,
                   keyboardType: TextInputType.emailAddress,
-                  prefixIcon: const Icon(Iconsax.sms_copy, size: 18, color: AppColors.darkTextTertiary),
+                  prefixIcon: Icon(Iconsax.sms_copy, size: 18, color: AppColors.textTertiary(context)),
                 ),
               ),
               const SizedBox(height: 18),
@@ -65,7 +66,7 @@ class LoginView extends GetView<AuthController> {
                   hintText: '••••••••',
                   controller: controller.loginPasswordController,
                   isPassword: true,
-                  prefixIcon: const Icon(Iconsax.lock_copy, size: 18, color: AppColors.darkTextTertiary),
+                  prefixIcon: Icon(Iconsax.lock_copy, size: 18, color: AppColors.textTertiary(context)),
                 ),
               ),
               const SizedBox(height: 12),
@@ -80,7 +81,7 @@ class LoginView extends GetView<AuthController> {
                     child: Text(
                       'Forgot password?',
                       style: AppTypography.secondary.copyWith(
-                        color: AppColors.lavenderLight,
+                        color: AppColors.primaryAccent(context),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -116,13 +117,13 @@ class LoginView extends GetView<AuthController> {
                   children: [
                     Text(
                       "Don't have an account? ",
-                      style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                     ),
                     GestureDetector(
                       onTap: () => Get.offNamed(AppRoutes.register),
                       child: Text(
                         'Sign up',
-                        style: AppTypography.bodySemiBold.copyWith(color: AppColors.lavenderLight),
+                        style: AppTypography.bodySemiBold.copyWith(color: AppColors.primaryAccent(context)),
                       ),
                     ),
                   ],

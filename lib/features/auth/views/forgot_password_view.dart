@@ -14,10 +14,11 @@ class ForgotPasswordView extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
+        backgroundColor: AppColors.background(context),
         leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_copy, color: AppColors.darkTextPrimary, size: 20),
+          icon: Icon(Iconsax.arrow_left_copy, color: AppColors.textPrimary(context), size: 20),
           onPressed: () => Get.back(),
         ),
       ),
@@ -31,7 +32,7 @@ class ForgotPasswordView extends GetView<AuthController> {
                 duration: const Duration(milliseconds: 500),
                 child: Text(
                   'Reset Password',
-                  style: AppTypography.largeHeading.copyWith(color: AppColors.darkTextPrimary),
+                  style: AppTypography.largeHeading.copyWith(color: AppColors.textPrimary(context)),
                 ),
               ),
               const SizedBox(height: 6),
@@ -40,7 +41,7 @@ class ForgotPasswordView extends GetView<AuthController> {
                 delay: const Duration(milliseconds: 100),
                 child: Text(
                   'Request a 6-digit OTP code to update your password.',
-                  style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                  style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                 ),
               ),
               const SizedBox(height: 32),
@@ -55,7 +56,7 @@ class ForgotPasswordView extends GetView<AuthController> {
                         hintText: 'name@example.com',
                         controller: controller.forgotEmailController,
                         keyboardType: TextInputType.emailAddress,
-                        prefixIcon: const Icon(Iconsax.sms_copy, size: 18, color: AppColors.darkTextTertiary),
+                        prefixIcon: Icon(Iconsax.sms_copy, size: 18, color: AppColors.textTertiary(context)),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -81,7 +82,7 @@ class ForgotPasswordView extends GetView<AuthController> {
                   hintText: '123456',
                   controller: controller.resetOtpController,
                   keyboardType: TextInputType.number,
-                  prefixIcon: const Icon(Iconsax.key_copy, size: 18, color: AppColors.darkTextTertiary),
+                  prefixIcon: Icon(Iconsax.key_copy, size: 18, color: AppColors.textTertiary(context)),
                 ),
               ),
               const SizedBox(height: 20),
@@ -93,7 +94,7 @@ class ForgotPasswordView extends GetView<AuthController> {
                   hintText: 'At least 6 characters',
                   controller: controller.resetNewPasswordController,
                   isPassword: true,
-                  prefixIcon: const Icon(Iconsax.lock_copy, size: 18, color: AppColors.darkTextTertiary),
+                  prefixIcon: Icon(Iconsax.lock_copy, size: 18, color: AppColors.textTertiary(context)),
                 ),
               ),
               const SizedBox(height: 32),

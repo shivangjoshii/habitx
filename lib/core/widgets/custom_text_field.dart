@@ -42,7 +42,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         Text(
           widget.label,
           style: AppTypography.caption.copyWith(
-            color: AppColors.darkTextSecondary,
+            color: AppColors.textSecondary(context),
             fontWeight: FontWeight.w600,
             letterSpacing: 0.3,
           ),
@@ -55,10 +55,28 @@ class _CustomTextFieldState extends State<CustomTextField> {
           validator: widget.validator,
           onChanged: widget.onChanged,
           autofocus: widget.autofocus,
-          style: AppTypography.bodyMedium.copyWith(color: AppColors.darkTextPrimary),
+          style: AppTypography.bodyMedium.copyWith(color: AppColors.textPrimary(context)),
           decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.surfaceSecondary(context),
             hintText: widget.hintText,
-            hintStyle: AppTypography.body.copyWith(color: AppColors.darkTextTertiary),
+            hintStyle: AppTypography.body.copyWith(color: AppColors.textTertiary(context)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.border(context), width: 1),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.border(context), width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primaryAccent(context), width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.error(context), width: 1),
+            ),
             prefixIcon: widget.prefixIcon != null
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -70,7 +88,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ? IconButton(
                     icon: Icon(
                       _obscureText ? Iconsax.eye_slash_copy : Iconsax.eye_copy,
-                      color: AppColors.darkTextTertiary,
+                      color: AppColors.textTertiary(context),
                       size: 20,
                     ),
                     onPressed: () {

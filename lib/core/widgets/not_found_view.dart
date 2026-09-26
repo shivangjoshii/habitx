@@ -11,7 +11,7 @@ class NotFoundView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -22,24 +22,24 @@ class NotFoundView extends StatelessWidget {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: AppColors.darkSurfaceSecondary,
+                  color: AppColors.surfaceSecondary(context),
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.darkBorder),
+                  border: Border.all(color: AppColors.border(context)),
                 ),
-                child: const Center(
-                  child: Icon(Iconsax.radar_copy, color: AppColors.lavenderLight, size: 32),
+                child: Center(
+                  child: Icon(Iconsax.radar_copy, color: AppColors.primaryAccent(context), size: 32),
                 ),
               ),
               const SizedBox(height: 24),
               Text(
                 'Page Not Found',
-                style: AppTypography.sectionHeading.copyWith(color: AppColors.darkTextPrimary),
+                style: AppTypography.sectionHeading.copyWith(color: AppColors.textPrimary(context)),
               ),
               const SizedBox(height: 8),
               Text(
                 'The requested attention sanctuary route does not exist.',
                 textAlign: TextAlign.center,
-                style: AppTypography.secondary.copyWith(color: AppColors.darkTextSecondary),
+                style: AppTypography.secondary.copyWith(color: AppColors.textSecondary(context)),
               ),
               const SizedBox(height: 32),
               CustomButton(

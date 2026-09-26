@@ -33,4 +33,56 @@ class AppColors {
   static const Color errorDark = Color(0xFFE16B76);
 
   static const Color transparent = Colors.transparent;
+
+  static bool isDark(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark;
+  }
+
+  static Color background(BuildContext context) {
+    return isDark(context) ? darkBackground : lightBackground;
+  }
+
+  static Color surface(BuildContext context) {
+    return isDark(context) ? darkSurface : lightSurface;
+  }
+
+  static Color surfaceSecondary(BuildContext context) {
+    return isDark(context) ? darkSurfaceSecondary : lightSurfaceSecondary;
+  }
+
+  static Color textPrimary(BuildContext context) {
+    return isDark(context) ? darkTextPrimary : lightTextPrimary;
+  }
+
+  static Color textSecondary(BuildContext context) {
+    return isDark(context) ? darkTextSecondary : lightTextSecondary;
+  }
+
+  static Color textTertiary(BuildContext context) {
+    return isDark(context) ? darkTextTertiary : lightTextTertiary;
+  }
+
+  static Color border(BuildContext context) {
+    return isDark(context) ? darkBorder : lightBorder;
+  }
+
+  static Color primaryAccent(BuildContext context) {
+    return isDark(context) ? lavenderLight : lavender;
+  }
+
+  static Color lavenderSoft(BuildContext context) {
+    return isDark(context) ? lavenderSoftDark : lavenderSoftLight;
+  }
+
+  static Color success(BuildContext context) {
+    return isDark(context) ? successDark : successLight;
+  }
+
+  static Color warning(BuildContext context) {
+    return isDark(context) ? warningDark : warningLight;
+  }
+
+  static Color error(BuildContext context) {
+    return isDark(context) ? errorDark : errorLight;
+  }
 }

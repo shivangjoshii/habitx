@@ -14,7 +14,7 @@ class WelcomeView extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -32,7 +32,7 @@ class WelcomeView extends GetView<AuthController> {
                   'Take back your attention.',
                   textAlign: TextAlign.center,
                   style: AppTypography.largeHeading.copyWith(
-                    color: AppColors.darkTextPrimary,
+                    color: AppColors.textPrimary(context),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -45,15 +45,15 @@ class WelcomeView extends GetView<AuthController> {
                   children: [
                     Text(
                       'Focus better.',
-                      style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                     ),
                     Text(
                       'Scroll less.',
-                      style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                     ),
                     Text(
                       'Build better habits.',
-                      style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                     ),
                   ],
                 ),
@@ -84,18 +84,18 @@ class WelcomeView extends GetView<AuthController> {
                 child: Obx(() => TextButton(
                       onPressed: controller.isGuestLoading.value ? null : controller.guestLogin,
                       child: controller.isGuestLoading.value
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 16,
                               height: 16,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.darkTextTertiary),
+                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.textTertiary(context)),
                               ),
                             )
                           : Text(
                               'Continue as Guest',
                               style: AppTypography.button.copyWith(
-                                color: AppColors.darkTextTertiary,
+                                color: AppColors.textTertiary(context),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

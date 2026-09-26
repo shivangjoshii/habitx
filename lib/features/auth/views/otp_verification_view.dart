@@ -17,30 +17,31 @@ class OtpVerificationView extends GetView<AuthController> {
       width: 52,
       height: 56,
       textStyle: AppTypography.largeHeading.copyWith(
-        color: AppColors.lavenderLight,
+        color: AppColors.primaryAccent(context),
         fontSize: 22,
         fontWeight: FontWeight.w700,
       ),
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceSecondary,
+        color: AppColors.surfaceSecondary(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: AppColors.border(context)),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyWith(
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceSecondary,
+        color: AppColors.surfaceSecondary(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.lavenderLight, width: 1.5),
+        border: Border.all(color: AppColors.primaryAccent(context), width: 1.5),
       ),
     );
 
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
+        backgroundColor: AppColors.background(context),
         leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_copy, color: AppColors.darkTextPrimary, size: 20),
+          icon: Icon(Iconsax.arrow_left_copy, color: AppColors.textPrimary(context), size: 20),
           onPressed: () => Get.back(),
         ),
       ),
@@ -54,7 +55,7 @@ class OtpVerificationView extends GetView<AuthController> {
                 duration: const Duration(milliseconds: 500),
                 child: Text(
                   'Verify Email',
-                  style: AppTypography.largeHeading.copyWith(color: AppColors.darkTextPrimary),
+                  style: AppTypography.largeHeading.copyWith(color: AppColors.textPrimary(context)),
                 ),
               ),
               const SizedBox(height: 6),
@@ -63,7 +64,7 @@ class OtpVerificationView extends GetView<AuthController> {
                 delay: const Duration(milliseconds: 100),
                 child: Obx(() => Text(
                       'Enter the 6-digit code dispatched to ${controller.pendingVerificationEmail.value}.',
-                      style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                     )),
               ),
               const SizedBox(height: 36),
@@ -100,14 +101,14 @@ class OtpVerificationView extends GetView<AuthController> {
                     if (controller.resendTimer.value > 0) {
                       return Text(
                         'Resend code in ${controller.resendTimer.value}s',
-                        style: AppTypography.secondary.copyWith(color: AppColors.darkTextTertiary),
+                        style: AppTypography.secondary.copyWith(color: AppColors.textTertiary(context)),
                       );
                     }
                     return TextButton(
                       onPressed: controller.resendVerificationOtp,
                       child: Text(
                         'Resend code',
-                        style: AppTypography.bodySemiBold.copyWith(color: AppColors.lavenderLight),
+                        style: AppTypography.bodySemiBold.copyWith(color: AppColors.primaryAccent(context)),
                       ),
                     );
                   }),

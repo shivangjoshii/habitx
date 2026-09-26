@@ -19,7 +19,7 @@ class ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -30,25 +30,25 @@ class ErrorView extends StatelessWidget {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: AppColors.errorDark.withValues(alpha: 0.15),
+                  color: AppColors.error(context).withValues(alpha: 0.15),
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.errorDark.withValues(alpha: 0.3)),
+                  border: Border.all(color: AppColors.error(context).withValues(alpha: 0.3)),
                 ),
-                child: const Center(
-                  child: Icon(Iconsax.warning_2_copy, color: AppColors.errorDark, size: 32),
+                child: Center(
+                  child: Icon(Iconsax.warning_2_copy, color: AppColors.error(context), size: 32),
                 ),
               ),
               const SizedBox(height: 24),
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: AppTypography.sectionHeading.copyWith(color: AppColors.darkTextPrimary),
+                style: AppTypography.sectionHeading.copyWith(color: AppColors.textPrimary(context)),
               ),
               const SizedBox(height: 10),
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: AppTypography.secondary.copyWith(color: AppColors.darkTextSecondary),
+                style: AppTypography.secondary.copyWith(color: AppColors.textSecondary(context)),
               ),
               const SizedBox(height: 32),
               CustomButton(

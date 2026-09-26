@@ -74,8 +74,8 @@ class _FocusOrbWidgetState extends State<FocusOrbWidget> with SingleTickerProvid
                 height: widget.size * (widget.isPulsing ? _scaleAnimation.value * 1.3 : 1.3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.lavenderSoftDark.withValues(
-                    alpha: widget.isPulsing ? _opacityAnimation.value : 0.15,
+                  color: AppColors.lavenderSoft(context).withValues(
+                    alpha: widget.isPulsing ? _opacityAnimation.value : 0.2,
                   ),
                 ),
               ),
@@ -85,7 +85,7 @@ class _FocusOrbWidgetState extends State<FocusOrbWidget> with SingleTickerProvid
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.lavenderLight.withValues(alpha: 0.4),
+                    color: AppColors.primaryAccent(context).withValues(alpha: 0.4),
                     width: 1.5,
                   ),
                 ),
@@ -93,18 +93,18 @@ class _FocusOrbWidgetState extends State<FocusOrbWidget> with SingleTickerProvid
               Container(
                 width: widget.size,
                 height: widget.size,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.lavenderLight,
+                  color: AppColors.primaryAccent(context),
                 ),
                 child: Center(
                   child: widget.child ??
                       Container(
                         width: widget.size * 0.4,
                         height: widget.size * 0.4,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.darkBackground,
+                          color: AppColors.background(context),
                         ),
                       ),
                 ),

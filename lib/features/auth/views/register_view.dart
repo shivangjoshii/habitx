@@ -15,10 +15,11 @@ class RegisterView extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
+        backgroundColor: AppColors.background(context),
         leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_copy, color: AppColors.darkTextPrimary, size: 20),
+          icon: Icon(Iconsax.arrow_left_copy, color: AppColors.textPrimary(context), size: 20),
           onPressed: () => Get.back(),
         ),
       ),
@@ -32,7 +33,7 @@ class RegisterView extends GetView<AuthController> {
                 duration: const Duration(milliseconds: 500),
                 child: Text(
                   'Create Account',
-                  style: AppTypography.largeHeading.copyWith(color: AppColors.darkTextPrimary),
+                  style: AppTypography.largeHeading.copyWith(color: AppColors.textPrimary(context)),
                 ),
               ),
               const SizedBox(height: 6),
@@ -41,7 +42,7 @@ class RegisterView extends GetView<AuthController> {
                 delay: const Duration(milliseconds: 100),
                 child: Text(
                   'Begin your attention management journey.',
-                  style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                  style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                 ),
               ),
               const SizedBox(height: 32),
@@ -52,7 +53,7 @@ class RegisterView extends GetView<AuthController> {
                   label: 'Full Name',
                   hintText: 'Pawan Kumar',
                   controller: controller.registerNameController,
-                  prefixIcon: const Icon(Iconsax.user_copy, size: 18, color: AppColors.darkTextTertiary),
+                  prefixIcon: Icon(Iconsax.user_copy, size: 18, color: AppColors.textTertiary(context)),
                 ),
               ),
               const SizedBox(height: 18),
@@ -64,7 +65,7 @@ class RegisterView extends GetView<AuthController> {
                   hintText: 'name@example.com',
                   controller: controller.registerEmailController,
                   keyboardType: TextInputType.emailAddress,
-                  prefixIcon: const Icon(Iconsax.sms_copy, size: 18, color: AppColors.darkTextTertiary),
+                  prefixIcon: Icon(Iconsax.sms_copy, size: 18, color: AppColors.textTertiary(context)),
                 ),
               ),
               const SizedBox(height: 18),
@@ -76,7 +77,7 @@ class RegisterView extends GetView<AuthController> {
                   hintText: 'At least 6 characters',
                   controller: controller.registerPasswordController,
                   isPassword: true,
-                  prefixIcon: const Icon(Iconsax.lock_copy, size: 18, color: AppColors.darkTextTertiary),
+                  prefixIcon: Icon(Iconsax.lock_copy, size: 18, color: AppColors.textTertiary(context)),
                 ),
               ),
               const SizedBox(height: 32),
@@ -98,13 +99,13 @@ class RegisterView extends GetView<AuthController> {
                   children: [
                     Text(
                       'Already have an account? ',
-                      style: AppTypography.body.copyWith(color: AppColors.darkTextSecondary),
+                      style: AppTypography.body.copyWith(color: AppColors.textSecondary(context)),
                     ),
                     GestureDetector(
                       onTap: () => Get.offNamed(AppRoutes.login),
                       child: Text(
                         'Sign in',
-                        style: AppTypography.bodySemiBold.copyWith(color: AppColors.lavenderLight),
+                        style: AppTypography.bodySemiBold.copyWith(color: AppColors.primaryAccent(context)),
                       ),
                     ),
                   ],

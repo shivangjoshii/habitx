@@ -30,17 +30,19 @@ class CustomButton extends StatelessWidget {
     Color textColor;
     BorderSide borderSide;
 
+    final isDark = AppColors.isDark(context);
+
     if (isOutlined) {
       backgroundColor = AppColors.transparent;
-      textColor = AppColors.darkTextPrimary;
-      borderSide = const BorderSide(color: AppColors.darkBorder, width: 1);
+      textColor = AppColors.textPrimary(context);
+      borderSide = BorderSide(color: AppColors.border(context), width: 1);
     } else if (isSecondary) {
-      backgroundColor = AppColors.darkSurfaceSecondary;
-      textColor = AppColors.darkTextPrimary;
-      borderSide = const BorderSide(color: AppColors.darkBorder, width: 1);
+      backgroundColor = AppColors.surfaceSecondary(context);
+      textColor = AppColors.textPrimary(context);
+      borderSide = BorderSide(color: AppColors.border(context), width: 1);
     } else {
-      backgroundColor = AppColors.lavenderLight;
-      textColor = AppColors.darkBackground;
+      backgroundColor = AppColors.primaryAccent(context);
+      textColor = isDark ? AppColors.darkBackground : Colors.white;
       borderSide = BorderSide.none;
     }
 

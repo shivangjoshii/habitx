@@ -16,24 +16,34 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Color(0xFF0B0B0D),
-      systemNavigationBarIconBrightness: Brightness.light,
-    ),
-  );
-
-  await Get.putAsync<StorageService>(() => StorageService().init());
+  final storageService = await Get.putAsync<StorageService>(() => StorageService().init());
   await Get.putAsync<ConnectivityService>(() => ConnectivityService().init());
   await Get.putAsync<ApiClient>(() => ApiClient().init());
 
-  runApp(const HabitXApp());
+  final savedTheme = storageService.getThemeMode();
+  ThemeMode themeMode = ThemeMode.light;
+  if (savedTheme == 'dark') {
+    themeMode = ThemeMode.dark;
+  } else if (savedTheme == 'system') {
+    themeMode = ThemeMode.system;
+  }
+
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: themeMode == ThemeMode.dark ? Brightness.light : Brightness.dark,
+      systemNavigationBarColor: themeMode == ThemeMode.dark ? const Color(0xFF0B0B0D) : const Color(0xFFF7F7F9),
+      systemNavigationBarIconBrightness: themeMode == ThemeMode.dark ? Brightness.light : Brightness.dark,
+    ),
+  );
+
+  runApp(HabitXApp(initialThemeMode: themeMode));
 }
 
 class HabitXApp extends StatelessWidget {
-  const HabitXApp({super.key});
+  final ThemeMode initialThemeMode;
+
+  const HabitXApp({super.key, this.initialThemeMode = ThemeMode.light});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +52,7 @@ class HabitXApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,
+      themeMode: initialThemeMode,
       initialRoute: AppPages.initial,
       getPages: AppPages.pages,
       unknownRoute: AppPages.notFoundPage,

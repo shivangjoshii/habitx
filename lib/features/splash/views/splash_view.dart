@@ -13,39 +13,42 @@ class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.background(context),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FadeInDown(
-              duration: const Duration(milliseconds: 900),
+              duration: const Duration(milliseconds: 800),
               child: const FocusOrbWidget(
-                size: 88,
+                size: 84,
                 isPulsing: true,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 28),
             FadeInUp(
-              duration: const Duration(milliseconds: 900),
-              delay: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 700),
+              delay: const Duration(milliseconds: 150),
               child: Text(
                 AppConstants.appName,
                 style: AppTypography.largeHeading.copyWith(
-                  color: AppColors.darkTextPrimary,
+                  color: AppColors.textPrimary(context),
                   letterSpacing: -0.5,
                   fontWeight: FontWeight.w700,
+                  fontSize: 30,
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             FadeInUp(
-              duration: const Duration(milliseconds: 900),
-              delay: const Duration(milliseconds: 350),
+              duration: const Duration(milliseconds: 700),
+              delay: const Duration(milliseconds: 300),
               child: Text(
                 AppConstants.appTagline,
                 style: AppTypography.secondary.copyWith(
-                  color: AppColors.darkTextSecondary,
+                  color: AppColors.textSecondary(context),
+                  fontSize: 13,
+                  letterSpacing: 0.2,
                 ),
               ),
             ),

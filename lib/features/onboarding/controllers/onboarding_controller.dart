@@ -12,22 +12,32 @@ class OnboardingController extends GetxController {
 
   final List<OnboardingItem> items = const [
     OnboardingItem(
-      title: 'A calm operating system for your attention.',
-      subtitle: 'Structure your work and study sessions with distraction-free timers and intelligent session pacing.',
-      highlight: 'Deep Focus',
+      title: 'Master Deep Focus',
+      subtitle: 'Distraction-free timers, ambient soundscapes, and strict study locks.',
+      tag: 'Deep Focus',
+      imageAsset: 'assets/images/onb1.png',
       icon: Iconsax.timer_1_copy,
     ),
     OnboardingItem(
-      title: 'Eliminate mindless scrolling & app loops.',
-      subtitle: 'Shield your mind from Reels, Shorts, and distracting feeds with native intervention screens.',
-      highlight: 'Block Distractions',
+      title: 'Block Addictive Feeds',
+      subtitle: 'Calm mindful interventions that stop endless scrolling on social apps.',
+      tag: 'App Shield',
+      imageAsset: 'assets/images/onb2.png',
       icon: Iconsax.shield_cross_copy,
     ),
     OnboardingItem(
-      title: 'Build unbreakable streaks & daily routines.',
-      subtitle: 'Connect your study targets with daily habits, progress metrics, and intentional time tracking.',
-      highlight: 'Intentional Living',
+      title: 'Build Lasting Habits',
+      subtitle: 'Track daily consistency, protect streaks, and reach target milestones.',
+      tag: 'Habit Mastery',
+      imageAsset: 'assets/images/onb3.png',
       icon: Iconsax.chart_square_copy,
+    ),
+    OnboardingItem(
+      title: 'AI Insights & Live Rooms',
+      subtitle: 'Smart focus recommendations and multiplayer accountability study groups.',
+      tag: 'Multiplayer OS',
+      imageAsset: 'assets/images/onb4.png',
+      icon: Iconsax.people_copy,
     ),
   ];
 
@@ -38,12 +48,22 @@ class OnboardingController extends GetxController {
   void nextPage() {
     if (currentPage.value < items.length - 1) {
       pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 320),
         curve: Curves.easeInOut,
       );
     } else {
-      completeOnboarding();
+      goToRegister();
     }
+  }
+
+  Future<void> goToLogin() async {
+    await _storageService.setOnboardingCompleted(true);
+    Get.offAllNamed(AppRoutes.login);
+  }
+
+  Future<void> goToRegister() async {
+    await _storageService.setOnboardingCompleted(true);
+    Get.offAllNamed(AppRoutes.register);
   }
 
   Future<void> completeOnboarding() async {
